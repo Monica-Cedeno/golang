@@ -1,13 +1,16 @@
 package main
 
 import ("fmt"
-		"strings"
+		
+		"booking-app/helper"
+		"strconv"
+
 )
 
 const conferenceTickets int = 50
 var conferenceName = "Go Conference"
 var remainingTickets int = 50
-var bookings [] string
+var bookings = make([]map [string]string, 0) //initializing an empty list of maps
 
 func main(){
 
@@ -16,10 +19,9 @@ func main(){
 	for {
 		firstName, lastName, email, userTickets := getUserInput()
 
-		isValidName, isValidEmail, isValidTicketNumber:= validateUserInput(firstName, lastName, email, userTickets)
+		isValidName, isValidEmail, isValidTicketNumber:= helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
 		if isValidName && isValidEmail && isValidTicketNumber {
-			
 
 			bookTicket(userTickets, firstName, lastName, email)
 
@@ -32,7 +34,6 @@ func main(){
 				break
 			}
 
-			
 		} else { 
 			if !isValidName{
 				fmt.Println("first name or last name you entered is too short")
@@ -60,8 +61,7 @@ func greetUsers() {
 func getFirstNames() [] string {
 	firstNames :=[]string{}
 			for _, booking :=range bookings { 
-				var names = strings.Fields (booking)
-				firstNames = append(firstNames, names [0])
+				firstNames = append(firstNames, booking["firstName"])
 			}
 			return firstNames
 }
@@ -89,7 +89,17 @@ func getUserInput()(string, string, string, int) {
 
 func bookTicket(userTickets int, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, firstName + " " + lastName, ",")
+	
+	// create a map for a user
+
+	var userData = make(map [string]string)
+	userData ["firstName"] = firstName
+	userData ["last Name"] = lastName
+	userData ["email"] = email
+	userData ["number of Tickets"] = strconv.FormatInt(int64(userTickets), 10)
+
+	bookings = append(bookings, userData)
+	fmt.Printf("list of bookings is %v\n", bookings)
 			
 	// fmt.Printf("The whole slice: %v\n", bookings)
 	// fmt.Printf("The first value: %v \n", bookings[0])
