@@ -1,16 +1,21 @@
 package main
 
 import ("fmt"
-		
 		"booking-app/helper"
-		"strconv"
-
 )
 
 const conferenceTickets int = 50
 var conferenceName = "Go Conference"
 var remainingTickets int = 50
-var bookings = make([]map [string]string, 0) //initializing an empty list of maps
+//var bookings = make([]map [string]string, 0) //initializing an empty list of maps
+var bookings = make([]UserData, 0) //initiates an empty list of userData structs
+
+type UserData struct {
+	firstName string
+	lastName string
+	email string
+	numberOfTickets int
+}
 
 func main(){
 
@@ -61,7 +66,7 @@ func greetUsers() {
 func getFirstNames() [] string {
 	firstNames :=[]string{}
 			for _, booking :=range bookings { 
-				firstNames = append(firstNames, booking["firstName"])
+				firstNames = append(firstNames, booking.firstName)
 			}
 			return firstNames
 }
@@ -91,12 +96,19 @@ func bookTicket(userTickets int, firstName string, lastName string, email string
 	remainingTickets = remainingTickets - userTickets
 	
 	// create a map for a user
+	//var userData = make(map [string]string)
+	var userData = UserData{
+		firstName: firstName,
+		lastName: lastName,
+		email: email,
+		numberOfTickets: userTickets,
+	}
 
-	var userData = make(map [string]string)
-	userData ["firstName"] = firstName
-	userData ["last Name"] = lastName
-	userData ["email"] = email
-	userData ["number of Tickets"] = strconv.FormatInt(int64(userTickets), 10)
+	//part of maps
+	//userData ["firstName"] = firstName
+	//userData ["last Name"] = lastName
+	//userData ["email"] = email
+	//userData ["number of Tickets"] = strconv.FormatInt(int64(userTickets), 10)
 
 	bookings = append(bookings, userData)
 	fmt.Printf("list of bookings is %v\n", bookings)
